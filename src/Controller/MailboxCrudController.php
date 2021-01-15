@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Mailbox;
+use App\Security\DovecotPasswordEncoder;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -15,10 +16,19 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class MailboxCrudController extends AbstractCrudController {
+    private PasswordEncoderInterface $passwordEncoder;
+
+    public function __construct(DovecotPasswordEncoder $passwordEncoder) {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     public static function getEntityFqcn(): string {
         return Mailbox::class;
     }
@@ -26,7 +36,7 @@ class MailboxCrudController extends AbstractCrudController {
     public function configureFields(string $pageName): iterable {
         return [
             FormField::addPanel('Mailbox details')->setIcon('fa fa-info-circle'),
-            Field::new('username')
+            Field::new('mail_username')
                 ->setRequired(true),
             AssociationField::new('domain')
                 ->setRequired(true),
@@ -36,6 +46,7 @@ class MailboxCrudController extends AbstractCrudController {
                 ->setHelp('0 is unlimited')
                 ->formatValue(fn ($val) => $val == 0 ? 'Unlimited' : $val." MB"),
             Field::new('enabled'),
+            Field::new('admin'),
             Field::new('sendonly')
                 ->setLabel("Send only?")
                 ->setHelp("Don't create a local mailbox for receiving emails<br>".
@@ -72,9 +83,28 @@ class MailboxCrudController extends AbstractCrudController {
             /** @var Mailbox $mailbox */
             $mailbox = $event->getData();
             if (!is_null($mailbox->getPlainPassword()) && !empty($mailbox->getPlainPassword())) {
-                $mailbox->setPassword($mailbox->getPlainPassword());
+                try {
+                    $mailbox->setPassword($this->passwordEncoder->encodePassword(
+                        $mailbox->getPlainPassword(),
+                        $mailbox->getSalt(),
+                    ));
+                } catch (BadCredentialsException $e) {
+                    $event->getForm()->get('plainPassword')->addError(new FormError(
+                        'Invalid password',
+                        null,
+                        [],
+                        null,
+                        $e,
+                    ));
+                    $event->stopPropagation();
+                }
+                $mailbox->eraseCredentials();
             }
         });
     }
 
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void {
+        parent::updateEntity($entityManager, $entityInstance);
+        $entityManager->refresh($entityInstance);
+    }
 }

@@ -2,18 +2,20 @@
 
 namespace App\Entity;
 
+use App\Repository\MailboxRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=MailboxRepository::class)
  * @ORM\Table(name="accounts", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="username", columns={"username", "domain"})
  * })
  */
-class Mailbox {
+class Mailbox implements UserInterface {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -52,17 +54,26 @@ class Mailbox {
      */
     private $sendonly;
 
-    private ?string $plainPassword = "";
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $admin;
+
+    private ?string $plainPassword = null;
 
     public function getId(): ?int {
         return $this->id;
     }
 
-    public function getUsername(): ?string {
+    public function getUsername() {
+        return $this->username . "@" . $this->domain;
+    }
+
+    public function getMailUsername(): ?string {
         return $this->username;
     }
 
-    public function setUsername(string $username): self {
+    public function setMailUsername(string $username): self {
         $this->username = $username;
 
         return $this;
@@ -82,10 +93,8 @@ class Mailbox {
         return $this->password;
     }
 
-    public function setPassword(string $plaintext): self {
-        $salt = base64_encode(random_bytes(48));
-        $hash = "{SHA512-CRYPT}". crypt($plaintext, '$6$'.$salt);
-        $this->password = $hash;
+    public function setPassword(string $password): self {
+        $this->password = $password;
         return $this;
     }
 
@@ -123,7 +132,33 @@ class Mailbox {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(?string $plainPassword): void {
+    public function setPlainPassword(?string $plainPassword): self {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getAdmin(): bool {
+        return $this->admin;
+    }
+
+    public function setAdmin($admin): self {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function getRoles() {
+        $roles = ['ROLE_USER'];
+        $this->admin ? ($roles[] = 'ROLE_ADMIN') : false;
+        return $roles;
+    }
+
+    public function eraseCredentials() {
+        $this->plainPassword = null;
+    }
+
+    public function getSalt(): string {
+        return hash('sha256', $this->getUsername());
     }
 }
