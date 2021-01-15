@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -29,13 +30,22 @@ class TlsPolicy {
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Must have domain")
+     * @Assert\Regex(
+     *     pattern="/^\[?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\]?(:[0-9]{1,5})?\]?$/",
+     *     message="Domain must conform to Postfix format (valid domain name, optionally in square brackets, optionally with a port)"
+     * )
      */
     private $domain;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Choice(
+     *     self::POLICIES,
+     *     message="Must be one of Postfix TLS policies",
+     *     multiple=false)
      */
-    private $policy;
+    private $policy = "";
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -74,5 +84,13 @@ class TlsPolicy {
         $this->params = $params;
 
         return $this;
+    }
+
+    /**
+     * @Assert\IsTrue(message="Domain must have matching brackets")
+     */
+    public function hasMatchedBracketsInDomain() {
+        return substr_count($this->domain, '[') ==
+            substr_count($this->domain, ']');
     }
 }
