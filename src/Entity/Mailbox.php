@@ -69,11 +69,11 @@ class Mailbox implements UserInterface {
         return $this->username . "@" . $this->domain;
     }
 
-    public function getMailUsername(): ?string {
+    public function getLocalUsername(): ?string {
         return $this->username;
     }
 
-    public function setMailUsername(string $username): self {
+    public function setLocalUsername(string $username): self {
         $this->username = $username;
 
         return $this;

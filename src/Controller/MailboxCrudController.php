@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Mailbox;
+use App\Filter\ConcatFilter;
 use App\Security\DovecotPasswordEncoder;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -36,10 +38,15 @@ class MailboxCrudController extends AbstractCrudController {
     public function configureFields(string $pageName): iterable {
         return [
             FormField::addPanel('Mailbox details')->setIcon('fa fa-info-circle'),
-            Field::new('mail_username')
-                ->setRequired(true),
+            Field::new('username')
+                ->onlyOnDetail()
+                ->onlyOnIndex(),
+            Field::new('local_username')
+                ->setRequired(true)
+                ->onlyOnForms(),
             AssociationField::new('domain')
-                ->setRequired(true),
+                ->setRequired(true)
+                ->onlyOnForms(),
             IntegerField::new('quota')
                 ->setRequired(true)
                 ->setLabel("Quota (MB)")
@@ -66,6 +73,14 @@ class MailboxCrudController extends AbstractCrudController {
         ];
     }
 
+    public function configureFilters(Filters $filters): Filters {
+        return $filters
+            ->add(ConcatFilter::new(['local_username', '@', 'domain:domain'], 'Email address'))
+            ->add('admin')
+            ->add('enabled')
+        ;
+    }
+
     public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface {
         $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
         $this->addEncodePasswordEventListener($formBuilder);
@@ -75,6 +90,10 @@ class MailboxCrudController extends AbstractCrudController {
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface {
         $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
         $this->addEncodePasswordEventListener($formBuilder);
+        $formBuilder->get('plainPassword')->setRequired(true)
+            ->get('first')->setRequired(true);
+        $formBuilder->get('plainPassword')
+            ->get('second')->setRequired(true);
         return $formBuilder;
     }
 

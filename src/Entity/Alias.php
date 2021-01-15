@@ -56,6 +56,10 @@ class Alias {
         return $this->id;
     }
 
+    public function getSourceAddress(): string {
+        return $this->source_username . "@" . $this->source_domain;
+    }
+
     public function getSourceUsername(): ?string {
         return $this->source_username;
     }
@@ -74,6 +78,10 @@ class Alias {
         $this->source_domain = $source_domain;
 
         return $this;
+    }
+
+    public function getDestinationAddress(): string {
+        return $this->destination_username . "@" . $this->destination_domain;
     }
 
     public function getDestinationUsername(): ?string {
