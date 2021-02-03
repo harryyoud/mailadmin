@@ -61,6 +61,8 @@ class AliasCrudController extends AbstractCrudController {
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->addOrderBy('entity.source_domain', 'ASC')
             ->addOrderBy('entity.source_username', 'ASC')
+            ->addOrderBy('entity.destination_domain', 'ASC')
+            ->addOrderBy('entity.destination_username', 'ASC')
         ;
     }
 }
