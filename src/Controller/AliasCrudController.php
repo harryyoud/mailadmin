@@ -20,6 +20,12 @@ class AliasCrudController extends AbstractCrudController {
         return Alias::class;
     }
 
+    public function createEntity(string $entityFqcn) {
+        $alias = new Alias();
+        $alias->setEnabled(true);
+        return $alias;
+    }
+
     public function configureFields(string $pageName): iterable {
         return [
             Field::new('enabled'),

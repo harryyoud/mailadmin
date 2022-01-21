@@ -35,6 +35,13 @@ class MailboxCrudController extends AbstractCrudController {
         return Mailbox::class;
     }
 
+    public function createEntity(string $entityFqcn) {
+        $mailbox = new Mailbox();
+        $mailbox->setEnabled(true);
+        $mailbox->setQuota(0);
+        return $mailbox;
+    }
+
     public function configureFields(string $pageName): iterable {
         return [
             FormField::addPanel('Mailbox details')->setIcon('fa fa-info-circle'),
