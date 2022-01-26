@@ -21,14 +21,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class MailboxCrudController extends AbstractCrudController {
-    private PasswordEncoderInterface $passwordEncoder;
+    private PasswordHasherInterface $passwordHasher;
 
     public function __construct(DovecotPasswordEncoder $passwordEncoder) {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordEncoder;
     }
 
     public static function getEntityFqcn(): string {
@@ -110,9 +110,8 @@ class MailboxCrudController extends AbstractCrudController {
             $mailbox = $event->getData();
             if (!is_null($mailbox->getPlainPassword()) && !empty($mailbox->getPlainPassword())) {
                 try {
-                    $mailbox->setPassword($this->passwordEncoder->encodePassword(
+                    $mailbox->setPassword($this->passwordHasher->hash(
                         $mailbox->getPlainPassword(),
-                        $mailbox->getSalt(),
                     ));
                 } catch (BadCredentialsException $e) {
                     $event->getForm()->get('plainPassword')->addError(new FormError(

@@ -6,7 +6,7 @@ use App\Repository\MailboxRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     @ORM\UniqueConstraint(name="username", columns={"username", "domain"})
  * })
  */
-class Mailbox implements UserInterface {
+class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -67,6 +67,10 @@ class Mailbox implements UserInterface {
 
     public function getUsername() {
         return $this->username . "@" . $this->domain;
+    }
+
+    public function getUserIdentifier(): string {
+        return $this->getUsername();
     }
 
     public function getLocalUsername(): ?string {
@@ -148,7 +152,7 @@ class Mailbox implements UserInterface {
         return $this;
     }
 
-    public function getRoles() {
+    public function getRoles(): array {
         $roles = ['ROLE_USER'];
         $this->admin ? ($roles[] = 'ROLE_ADMIN') : false;
         return $roles;

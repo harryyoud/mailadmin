@@ -1,12 +1,11 @@
 security:
     enable_authenticator_manager: true
-
     providers:
         users:
             entity:
                 class: 'App\Entity\Mailbox'
 
-    encoders:
+    password_hashers:
         App\Entity\Mailbox:
             id: App\Security\DovecotPasswordEncoder
 
@@ -15,12 +14,15 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: false
+#            anonymous: false
             lazy: true
             provider: users
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
+            form_login:
+                login_path: login
+                check_path: login
+#            guard:
+#                authenticators:
+#                    - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
 

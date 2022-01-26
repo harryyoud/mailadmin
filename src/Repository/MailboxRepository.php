@@ -15,7 +15,7 @@ class MailboxRepository extends ServiceEntityRepository implements UserLoaderInt
          parent::__construct($registry, Mailbox::class);
      }
 
-    public function loadUserByUsername(string $username): ?UserInterface {
+    public function loadUserByIdentifier(string $username): ?UserInterface {
         $split = explode("@", $username);
         if (count($split) != 2) {
             return null;

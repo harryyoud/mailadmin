@@ -53,14 +53,14 @@ class DashboardController extends AbstractDashboardController {
     }
 
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/login", name="login")
      * @param AuthenticationUtils $authenticationUtils
+     * @param AdminUrlGenerator $routeBuilder
      * @return Response
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response {
+    public function login(AuthenticationUtils $authenticationUtils, AdminUrlGenerator $routeBuilder): Response {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        $routeBuilder = $this->get(AdminUrlGenerator::class);
         return $this->render('@EasyAdmin/page/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,

@@ -4,18 +4,25 @@
 namespace App\Security;
 
 
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Exception\InvalidPasswordException;
+use Symfony\Component\PasswordHasher\Hasher\CheckPasswordLengthTrait;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-class DovecotPasswordEncoder implements PasswordEncoderInterface {
+class DovecotPasswordEncoder implements PasswordHasherInterface {
+    use CheckPasswordLengthTrait;
+
     private const PASSWORD_PREFIX = "{ARGON2ID}";
     private const ALGO = 'argon2id';
 
     /**
      * @inheritDoc
      */
-    public function encodePassword(string $raw, ?string $salt): string {
-        return $this->addPrefix(password_hash($raw, self::ALGO));
+    public function hash(string $plainPassword): string {
+        if ($this->isPasswordTooLong($plainPassword)) {
+            throw new InvalidPasswordException();
+        }
+        return $this->addPrefix(password_hash($plainPassword, self::ALGO));
     }
 
     private function stripPrefix(string $hash): string {
@@ -32,14 +39,17 @@ class DovecotPasswordEncoder implements PasswordEncoderInterface {
     /**
      * @inheritDoc
      */
-    public function isPasswordValid(string $encoded, string $raw, ?string $salt): bool {
-        return password_verify($raw, $this->stripPrefix($encoded));
+    public function verify(string $hashedPassword, string $plainPassword): bool {
+        if ('' === $plainPassword || $this->isPasswordTooLong($plainPassword)) {
+            return false;
+        }
+        return password_verify($plainPassword, $this->stripPrefix($hashedPassword));
     }
 
     /**
      * @inheritDoc
      */
-    public function needsRehash(string $encoded): bool {
+    public function needsRehash(string $hashedPassword): bool {
         return false;
     }
 }
