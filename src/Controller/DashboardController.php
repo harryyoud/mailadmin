@@ -60,9 +60,13 @@ class DashboardController extends AbstractDashboardController {
     public function login(AuthenticationUtils $authenticationUtils): Response {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render('security/login.html.twig', [
+        $routeBuilder = $this->get(AdminUrlGenerator::class);
+        return $this->render('@EasyAdmin/page/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
+            'page_title' => 'Mail Admin Login',
+            'csrf_token_intention' => 'authenticate',
+            'target_path' => $routeBuilder->setController(MailboxCrudController::class)->generateUrl(),
         ]);
     }
 
