@@ -1,8 +1,8 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block content_title %}Log in!{% endblock %}
 
-{% block page_content %}
+{% block main %}
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
