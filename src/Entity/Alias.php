@@ -26,7 +26,7 @@ class Alias {
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=64, nullable=true)
      */
     private $source_username;
 
@@ -57,17 +57,16 @@ class Alias {
     }
 
     public function getSourceAddress(): string {
-        if (is_null($this->source_domain)) {
-            return $this->source_username . "@" . "*";
-        }
-        return $this->source_username . "@" . $this->source_domain;
+        $u = $this->source_username ?? "*";
+        $d = $this->source_domain ?? "*";
+        return $u . "@" . $d;
     }
 
     public function getSourceUsername(): ?string {
         return $this->source_username;
     }
 
-    public function setSourceUsername(string $source_username): self {
+    public function setSourceUsername(?string $source_username): self {
         $this->source_username = $source_username;
 
         return $this;
@@ -77,7 +76,7 @@ class Alias {
         return $this->source_domain;
     }
 
-    public function setSourceDomain(Domain $source_domain): self {
+    public function setSourceDomain(?Domain $source_domain): self {
         $this->source_domain = $source_domain;
 
         return $this;

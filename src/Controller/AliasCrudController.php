@@ -34,7 +34,8 @@ class AliasCrudController extends AbstractCrudController {
             Field::new('source_address', 'From')
                 ->onlyOnIndex(),
             Field::new('source_username', 'Username')
-                ->setRequired(true)
+                ->setRequired(false)
+                ->setHelp("Leaving this blank is the same as a catchall")
                 ->onlyOnDetail()
                 ->onlyOnForms(),
             AssociationField::new('source_domain', 'Domain')
