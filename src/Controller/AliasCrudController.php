@@ -38,7 +38,8 @@ class AliasCrudController extends AbstractCrudController {
                 ->onlyOnDetail()
                 ->onlyOnForms(),
             AssociationField::new('source_domain', 'Domain')
-                ->setRequired(true)
+                ->setRequired(false)
+                ->setHelp("Leaving this blank is the same as a wildcard (for e.g. postmaster@)")
                 ->onlyOnDetail()
                 ->onlyOnForms(),
 

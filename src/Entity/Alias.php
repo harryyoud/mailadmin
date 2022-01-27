@@ -32,7 +32,7 @@ class Alias {
 
     /**
      * @ManyToOne(targetEntity="Domain")
-     * @JoinColumn(name="source_domain", referencedColumnName="domain", nullable=false)
+     * @JoinColumn(name="source_domain", referencedColumnName="domain", nullable=true)
      */
     private $source_domain;
 
@@ -57,6 +57,9 @@ class Alias {
     }
 
     public function getSourceAddress(): string {
+        if (is_null($this->source_domain)) {
+            return $this->source_username . "@" . "*";
+        }
         return $this->source_username . "@" . $this->source_domain;
     }
 
