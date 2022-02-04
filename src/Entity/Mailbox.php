@@ -65,12 +65,12 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this->id;
     }
 
-    public function getUsername() {
+    public function getAddress() {
         return $this->username . "@" . $this->domain;
     }
 
     public function getUserIdentifier(): string {
-        return $this->getUsername();
+        return $this->getAddress();
     }
 
     public function getLocalUsername(): ?string {
@@ -163,6 +163,6 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
     }
 
     public function getSalt(): string {
-        return hash('sha256', $this->getUsername());
+        return hash('sha256', $this->getAddress());
     }
 }

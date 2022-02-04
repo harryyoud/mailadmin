@@ -52,7 +52,7 @@ class MailboxCrudController extends AbstractCrudController {
     public function configureFields(string $pageName): iterable {
         return [
             FormField::addPanel('Mailbox details')->setIcon('fa fa-info-circle'),
-            Field::new('username')
+            Field::new('address', 'Email address')
                 ->onlyOnDetail()
                 ->onlyOnIndex(),
             Field::new('local_username', 'Username')
