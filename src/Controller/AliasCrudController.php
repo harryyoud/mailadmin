@@ -7,15 +7,18 @@ use App\Filter\ConcatFilter;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class AliasCrudController extends AbstractCrudController {
+
     public static function getEntityFqcn(): string {
         return Alias::class;
     }
@@ -26,8 +29,16 @@ class AliasCrudController extends AbstractCrudController {
         return $alias;
     }
 
+    public function configureCrud(Crud $crud): Crud {
+        return $crud
+            ->setEntityLabelInPlural('Aliases')
+            ->setEntityLabelInSingular('Alias')
+        ;
+    }
+
     public function configureFields(string $pageName): iterable {
         return [
+            FormField::addPanel(),
             Field::new('enabled'),
 
             FormField::addPanel('From'),
@@ -37,12 +48,14 @@ class AliasCrudController extends AbstractCrudController {
                 ->setRequired(false)
                 ->setHelp("Leaving this blank is the same as a catchall")
                 ->onlyOnDetail()
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setColumns(6),
             AssociationField::new('source_domain', 'Domain')
                 ->setRequired(false)
                 ->setHelp("Leaving this blank is the same as a wildcard (for e.g. postmaster@)")
                 ->onlyOnDetail()
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setColumns(6),
 
             FormField::addPanel('To'),
             Field::new('destination_address', 'To')
@@ -50,11 +63,13 @@ class AliasCrudController extends AbstractCrudController {
             Field::new('destination_username', 'Username')
                 ->setRequired(true)
                 ->onlyOnDetail()
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setColumns(6),
             Field::new('destination_domain', 'Domain')
                 ->setRequired(true)
                 ->onlyOnDetail()
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setColumns(6)
         ];
     }
 

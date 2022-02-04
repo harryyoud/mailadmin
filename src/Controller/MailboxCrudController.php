@@ -6,6 +6,7 @@ use App\Entity\Mailbox;
 use App\Filter\ConcatFilter;
 use App\Security\DovecotPasswordEncoder;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -42,41 +43,62 @@ class MailboxCrudController extends AbstractCrudController {
         return $mailbox;
     }
 
+    public function configureCrud(Crud $crud): Crud {
+        return $crud
+            ->setEntityLabelInPlural('Mailboxes')
+            ->setEntityLabelInSingular('Mailbox')
+        ;
+    }
     public function configureFields(string $pageName): iterable {
         return [
             FormField::addPanel('Mailbox details')->setIcon('fa fa-info-circle'),
             Field::new('username')
                 ->onlyOnDetail()
                 ->onlyOnIndex(),
-            Field::new('local_username')
+            Field::new('local_username', 'Username')
                 ->setRequired(true)
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setColumns(6),
             AssociationField::new('domain')
                 ->setRequired(true)
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setColumns(6),
+
             IntegerField::new('quota')
                 ->setRequired(true)
                 ->setLabel("Quota (MB)")
                 ->setHelp('0 is unlimited')
-                ->formatValue(fn ($val) => $val == 0 ? 'Unlimited' : $val." MB"),
-            Field::new('enabled'),
-            Field::new('admin'),
+                ->formatValue(fn ($val) => $val == 0 ? 'Unlimited' : $val." MB")
+                ->setColumns(2),
+            Field::new('enabled')
+                ->setColumns('col-md-2 offset-md-4'),
+            Field::new('admin')
+                ->setColumns(2),
             Field::new('sendonly')
                 ->setLabel("Send only?")
                 ->setHelp("Don't create a local mailbox for receiving emails<br>".
-                    "Useful as a no-reply mailbox"),
+                    "Useful as a no-reply mailbox")
+                ->setColumns(2),
 
-            FormField::addPanel('Change password')->setIcon('fa fa-key'),
-            Field::new('plainPassword', 'New password')->onlyOnForms()
+            FormField::addPanel('Password')->setIcon('fa fa-key'),
+            Field::new('plainPassword', 'Password')->onlyWhenCreating()
+                ->setFormType(PasswordType::class)
+                ->setRequired(true),
+            Field::new('plainPassword', 'Reset password')->onlyWhenUpdating()
                 ->setFormType(RepeatedType::class)
+                ->setRequired(false)
                 ->setFormTypeOptions([
                     'type' => PasswordType::class,
                     'first_options' => [
                         'label' => 'Reset password',
                         'help' => 'Leave blank to not change password',
+                        'row_attr' => ['class' => 'col-md-6 col-xl-4'],
                     ],
-                    'second_options' => ['label' => 'Repeat password'],
-                ])
+                    'second_options' => [
+                        'label' => 'Repeat new password',
+                        'row_attr' => ['class' => 'col-md-6 col-xl-4'],
+                    ],
+                ]),
         ];
     }
 
@@ -97,10 +119,6 @@ class MailboxCrudController extends AbstractCrudController {
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface {
         $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
         $this->addEncodePasswordEventListener($formBuilder);
-        $formBuilder->get('plainPassword')->setRequired(true)
-            ->get('first')->setRequired(true);
-        $formBuilder->get('plainPassword')
-            ->get('second')->setRequired(true);
         return $formBuilder;
     }
 

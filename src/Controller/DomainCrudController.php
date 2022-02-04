@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Domain;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -16,5 +17,12 @@ class DomainCrudController extends AbstractCrudController {
         return [
             TextField::new('domain')
         ];
+    }
+
+    public function configureCrud(Crud $crud): Crud {
+        return $crud
+            ->setEntityLabelInPlural('Domains')
+            ->setEntityLabelInSingular('Domain')
+        ;
     }
 }
