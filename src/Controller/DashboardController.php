@@ -40,11 +40,11 @@ class DashboardController extends AbstractDashboardController {
     }
 
     public function configureMenuItems(): iterable {
-        if (!$this->auth->isGranted('ROLE_USER')) {
-            return [
-                MenuItem::linktoDashboard('Login', 'fa fa-key'),
-            ];
-        }
+//        if (!$this->auth->isGranted('ROLE_USER')) {
+//            return [
+//                MenuItem::linktoDashboard('Login', 'fa fa-key'),
+//            ];
+//        }
         return [
 //            MenuItem::linktoDashboard('Dashboard', 'fa fa-home'),
             MenuItem::linkToCrud('Mailboxes', 'fa fa-inbox', Mailbox::class),
