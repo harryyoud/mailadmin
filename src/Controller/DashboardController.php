@@ -19,16 +19,18 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class DashboardController extends AbstractDashboardController {
     private AuthorizationCheckerInterface $auth;
+    private AdminUrlGenerator $adminUrlGenerator;
 
-    public function __construct(AuthorizationCheckerInterface $auth) {
+    public function __construct(AuthorizationCheckerInterface $auth, AdminUrlGenerator $adminUrlGenerator) {
         $this->auth = $auth;
+        $this->adminUrlGenerator = $adminUrlGenerator;
     }
 
     /**
      * @Route("/", name="admin")
      */
     public function index(): Response {
-        $routeBuilder = $this->get(AdminUrlGenerator::class);
+        $routeBuilder = $this->adminUrlGenerator;
         return $this->redirect($routeBuilder->setController(MailboxCrudController::class)->generateUrl());
     }
 

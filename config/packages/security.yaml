@@ -13,9 +13,9 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            anonymous: true
-            lazy: true
+#        main:
+#            anonymous: true
+#            lazy: true
 #            provider: users
 #            form_login:
 #                login_path: login
@@ -23,8 +23,8 @@ security:
 #            guard:
 #                authenticators:
 #                    - App\Security\LoginFormAuthenticator
-            logout:
-                path: app_logout
+#            logout:
+#                path: app_logout
 
     access_control:
 #        - { path: ^/login }
