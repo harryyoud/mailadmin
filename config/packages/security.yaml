@@ -14,12 +14,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-#            anonymous: false
+            anonymous: true
             lazy: true
-            provider: users
-            form_login:
-                login_path: login
-                check_path: login
+#            provider: users
+#            form_login:
+#                login_path: login
+#                check_path: login
 #            guard:
 #                authenticators:
 #                    - App\Security\LoginFormAuthenticator
@@ -27,5 +27,5 @@ security:
                 path: app_logout
 
     access_control:
-        - { path: ^/login }
-        - { path: ^/, roles: ROLE_ADMIN }
+#        - { path: ^/login }
+#        - { path: ^/, roles: ROLE_ADMIN }
