@@ -22,7 +22,9 @@ class AppPasswordType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('appName', TextType::class)
+            ->add('appName', TextType::class, [
+                'help' => 'This will form part of the username (e.g. user@domain.com_appname) for this app-specific credential'
+            ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Password',
                 'help' => 'Leave blank to leave password unchanged',
