@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Mailbox;
 use App\Filter\ConcatFilter;
 use App\Security\DovecotPasswordEncoder;
+use App\Type\AppPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
@@ -13,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -80,11 +82,11 @@ class MailboxCrudController extends AbstractCrudController {
                     "Useful as a no-reply mailbox")
                 ->setColumns(2),
 
-            FormField::addPanel('Password')->setIcon('fa fa-key'),
-            Field::new('plainPassword', 'Password')->onlyWhenCreating()
+            FormField::addPanel('Passwords')->setIcon('fa fa-key'),
+            Field::new('plainPassword', 'Main password')->onlyWhenCreating()
                 ->setFormType(PasswordType::class)
                 ->setRequired(true),
-            Field::new('plainPassword', 'Reset password')->onlyWhenUpdating()
+            Field::new('plainPassword', 'Reset main password')->onlyWhenUpdating()
                 ->setFormType(RepeatedType::class)
                 ->setRequired(false)
                 ->setFormTypeOptions([
@@ -99,6 +101,12 @@ class MailboxCrudController extends AbstractCrudController {
                         'row_attr' => ['class' => 'col-md-6 col-xl-4'],
                     ],
                 ]),
+            CollectionField::new('appPasswords')
+                ->allowAdd()
+                ->allowDelete()
+                ->setEntryIsComplex(true)
+                ->setEntryType(AppPasswordType::class)
+                ->onlyWhenUpdating(),
         ];
     }
 

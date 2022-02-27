@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MailboxRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -16,6 +17,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * })
  */
 class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
+
+    public function __construct() {
+        $this->appPasswords = new ArrayCollection();
+    }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -33,6 +39,11 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
      * @JoinColumn(name="domain", referencedColumnName="domain", nullable=false)
      */
     private $domain;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Password", mappedBy="mailbox", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $appPasswords;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -164,5 +175,23 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function getSalt(): string {
         return hash('sha256', $this->getAddress());
+    }
+
+    public function getAppPasswords() {
+        return $this->appPasswords;
+    }
+
+    public function __toString(): string {
+        return $this->getAddress();
+    }
+
+    public function addAppPassword(Password $password) {
+        $this->appPasswords->add($password);
+        $password->setMailbox($this);
+    }
+
+    public function removeAppPassword(Password $password) {
+        $this->appPasswords->removeElement($password);
+        $password->setMailbox(null);
     }
 }
