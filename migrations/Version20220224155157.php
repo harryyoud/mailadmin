@@ -9,7 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20220224155157 extends AbstractMigration {
     public function getDescription(): string {
-        return '';
+        return 'Add app-specific passwords';
     }
 
     public function up(Schema $schema): void {

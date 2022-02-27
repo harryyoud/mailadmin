@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Password
  *
- * @ORM\Table(name="passwords", indexes={@ORM\Index(name="IDX_ED822B16A69FE20B", columns={"mailbox"})})
+ * @ORM\Table(name="passwords", indexes={@ORM\Index(name="IDX_ED822B16A69FE20B", columns={"mailbox"})}, uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="app_password", columns={"app_name", "mailbox"})
+ * })
  * @ORM\Entity
  */
 class Password
