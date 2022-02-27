@@ -6,8 +6,6 @@ use App\Entity\Alias;
 use App\Entity\Domain;
 use App\Entity\Mailbox;
 use App\Entity\TlsPolicy;
-use Doctrine\Common\Util\Debug;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -40,13 +38,7 @@ class DashboardController extends AbstractDashboardController {
     }
 
     public function configureMenuItems(): iterable {
-//        if (!$this->auth->isGranted('ROLE_USER')) {
-//            return [
-//                MenuItem::linktoDashboard('Login', 'fa fa-key'),
-//            ];
-//        }
         return [
-//            MenuItem::linktoDashboard('Dashboard', 'fa fa-home'),
             MenuItem::linkToCrud('Mailboxes', 'fa fa-inbox', Mailbox::class),
             MenuItem::linkToCrud('Aliases', 'fa fa-share', Alias::class),
             MenuItem::linkToCrud('Domains', 'fa fa-globe-americas', Domain::class),
