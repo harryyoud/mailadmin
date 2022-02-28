@@ -38,7 +38,7 @@ class Password
     private $password;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Mailbox")
+     * @ORM\ManyToOne(targetEntity="Mailbox", inversedBy="appPasswords")
      * @ORM\JoinColumn(name="mailbox", referencedColumnName="id", nullable=false)
      */
     private $mailbox;
