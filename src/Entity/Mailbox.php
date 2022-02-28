@@ -65,7 +65,7 @@ class Mailbox {
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $allowedIps = '0.0.0.0/0';
+    private $allowedIps = '0.0.0.0/0,::0/0';
 
     private ?string $plainPassword = null;
 
