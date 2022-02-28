@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\MailboxRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
- * @ORM\Entity(repositoryClass=MailboxRepository::class)
+ * @ORM\Entity
  * @ORM\Table(name="accounts", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="username", columns={"username", "domain"})
  * })
@@ -62,6 +61,11 @@ class Mailbox {
      * @ORM\Column(type="boolean")
      */
     private $sendonly;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $allowedIps = '0.0.0.0/0';
 
     private ?string $plainPassword = null;
 
@@ -166,5 +170,13 @@ class Mailbox {
     public function removeAppPassword(Password $password) {
         $this->appPasswords->removeElement($password);
         $password->setMailbox(null);
+    }
+
+    public function getAllowedIps() {
+        return $this->allowedIps;
+    }
+
+    public function setAllowedIps($allowedIps): void {
+        $this->allowedIps = $allowedIps;
     }
 }

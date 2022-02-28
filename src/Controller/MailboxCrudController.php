@@ -26,6 +26,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class MailboxCrudController extends AbstractCrudController {
     private PasswordHasherInterface $passwordHasher;
@@ -80,7 +81,7 @@ class MailboxCrudController extends AbstractCrudController {
                     "Useful as a no-reply mailbox")
                 ->setColumns(3),
 
-            FormField::addPanel('Passwords')->setIcon('fa fa-key'),
+            FormField::addPanel('Security')->setIcon('fa fa-key'),
             Field::new('plainPassword', 'Main password')->onlyWhenCreating()
                 ->setFormType(PasswordType::class)
                 ->setRequired(true),
@@ -99,6 +100,13 @@ class MailboxCrudController extends AbstractCrudController {
                         'row_attr' => ['class' => 'col-md-6 col-xl-4'],
                     ],
                 ]),
+            Field::new('allowedIps', 'Allowed IPs for login')
+                ->setRequired(false)
+                ->setHelp('Comma separated CIDR networks')
+                ->setFormTypeOption('constraints', [
+                    new Regex('/^(((([0-9]{1,3}\.){3}([0-9]{1,3})\/[0-9]{1,2})|(([0-9a-f]{0,4}\:{1,2})+([0-9a-f]{1,4})\/[0-9]{1,3})|(local)),?)*$/', 'Must be CIDR style networks separated by comma')
+                ])
+                ->setFormTypeOption('empty_data', '0.0.0.0/0'),
             CollectionField::new('appPasswords')
                 ->allowAdd()
                 ->allowDelete()
