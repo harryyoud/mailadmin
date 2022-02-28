@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=MailboxRepository::class)
@@ -16,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     @ORM\UniqueConstraint(name="username", columns={"username", "domain"})
  * })
  */
-class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
+class Mailbox {
 
     public function __construct() {
         $this->appPasswords = new ArrayCollection();
@@ -65,11 +63,6 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
      */
     private $sendonly;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $admin;
-
     private ?string $plainPassword = null;
 
     public function getId(): ?int {
@@ -78,10 +71,6 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function getAddress() {
         return $this->username . "@" . $this->domain;
-    }
-
-    public function getUserIdentifier(): string {
-        return $this->getAddress();
     }
 
     public function getLocalUsername(): ?string {
@@ -151,22 +140,6 @@ class Mailbox implements UserInterface, PasswordAuthenticatedUserInterface {
         $this->plainPassword = $plainPassword;
 
         return $this;
-    }
-
-    public function getAdmin(): bool {
-        return $this->admin;
-    }
-
-    public function setAdmin($admin): self {
-        $this->admin = $admin;
-
-        return $this;
-    }
-
-    public function getRoles(): array {
-        $roles = ['ROLE_USER'];
-        $this->admin ? ($roles[] = 'ROLE_ADMIN') : false;
-        return $roles;
     }
 
     public function eraseCredentials() {

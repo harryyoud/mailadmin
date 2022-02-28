@@ -71,16 +71,14 @@ class MailboxCrudController extends AbstractCrudController {
                 ->setLabel("Quota (MB)")
                 ->setHelp('0 is unlimited')
                 ->formatValue(fn ($val) => $val == 0 ? 'Unlimited' : $val." MB")
-                ->setColumns(2),
+                ->setColumns(3),
             Field::new('enabled')
                 ->setColumns('col-md-2 offset-md-4'),
-            Field::new('admin')
-                ->setColumns(2),
             Field::new('sendonly')
                 ->setLabel("Send only?")
                 ->setHelp("Don't create a local mailbox for receiving emails<br>".
                     "Useful as a no-reply mailbox")
-                ->setColumns(2),
+                ->setColumns(3),
 
             FormField::addPanel('Passwords')->setIcon('fa fa-key'),
             Field::new('plainPassword', 'Main password')->onlyWhenCreating()
@@ -113,7 +111,6 @@ class MailboxCrudController extends AbstractCrudController {
     public function configureFilters(Filters $filters): Filters {
         return $filters
             ->add(ConcatFilter::new(['local_username', '@', 'domain:domain'], 'Email address'))
-            ->add('admin')
             ->add('enabled')
         ;
     }
