@@ -17,14 +17,13 @@ class AnyoneShare
      *
      * @ORM\Column(name="from_user", type="string", length=100, nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $fromUser;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="dummy", type="string", length=1, nullable=true, options={"default"="1","fixed"=true})
+     * @ORM\Column(name="dummy", type="string", length=1, nullable=true, options={"default": 1})
      */
     private $dummy = '1';
 
