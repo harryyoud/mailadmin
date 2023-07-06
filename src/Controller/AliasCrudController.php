@@ -24,7 +24,8 @@ class AliasCrudController extends AbstractCrudController {
 
     public function createEntity(string $entityFqcn) {
         $alias = new Alias();
-        $alias->setEnabled(true);
+        $alias->setCanSend(true);
+        $alias->setCanReceive(true);
         return $alias;
     }
 
@@ -38,7 +39,12 @@ class AliasCrudController extends AbstractCrudController {
     public function configureFields(string $pageName): iterable {
         return [
             FormField::addPanel(),
-            Field::new('enabled'),
+            Field::new('can_send')
+                ->setHelp("Allows the destination user to be able to send from this alias")
+                ->setColumns(3),
+            Field::new('can_receive')
+                ->setHelp("Forwards the source user mail to destination user. If source user is a mailbox, a copy will be stored in that mailbox")
+                ->setColumns(3),
 
             FormField::addPanel('From'),
             Field::new('source_address', 'From')

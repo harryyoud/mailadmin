@@ -49,8 +49,12 @@ class Alias {
     /**
      * @ORM\Column(type="boolean")
      */
-    private $enabled;
+    private $can_send;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $can_receive;
 
     public function getId(): ?int {
         return $this->id;
@@ -106,12 +110,20 @@ class Alias {
         return $this;
     }
 
-    public function getEnabled() {
-        return $this->enabled;
+    public function getCanSend() {
+        return $this->can_send;
     }
 
-    public function setEnabled($enabled): void {
-        $this->enabled = $enabled;
+    public function setCanSend($can_send): void {
+        $this->can_send = $can_send;
+    }
+
+    public function getCanReceive() {
+        return $this->can_receive;
+    }
+
+    public function setCanReceive($can_receive): void {
+        $this->can_receive = $can_receive;
     }
 
 }
