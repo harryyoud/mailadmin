@@ -15,8 +15,11 @@ class UserProvider implements UserProviderInterface, OAuthAwareUserProviderInter
 
     public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface {
         return new User(
-            $response->getUsername(),
-            $response->getPath('roles') ?? []
+            $response->getEmail(),
+            array_map(
+                fn ($role) => 'ROLE_' . strtoupper($role),
+                $response->getData()['roles'] ?? []
+            )
         );
     }
 
@@ -24,8 +27,10 @@ class UserProvider implements UserProviderInterface, OAuthAwareUserProviderInter
         if (!$this->supportsClass($user::class)) {
             throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', $user::class));
         }
-
-        return $this->loadUserByIdentifier($user->getUserIdentifier());
+        return new User(
+            $user->getUserIdentifier(),
+            $user->getRoles(),
+        );
     }
 
     public function supportsClass($class): bool {

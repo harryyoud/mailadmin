@@ -10,11 +10,12 @@ class User implements UserInterface {
 
     public function __construct(string $username, array $roles) {
         $this->username = $username;
-        $this->roles = [
+        $this->roles = array_unique([
             'ROLE_USER',
             'ROLE_OAUTH_USER',
+            'THING',
             ...$roles,
-        ];
+        ]);
     }
 
     public function getUserIdentifier(): string {
