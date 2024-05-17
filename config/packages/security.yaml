@@ -2,7 +2,7 @@ security:
     enable_authenticator_manager: true
     providers:
         hwi:
-            id: hwi_oauth.user.provider
+            id: App\Security\UserProvider
 
     password_hashers:
         App\Entity\Mailbox:
@@ -22,7 +22,7 @@ security:
                 failure_path: /login
 
                 oauth_user_provider:
-                    service: hwi_oauth.user.provider
+                    service: App\Security\UserProvider
             logout:
                 path: "/logout"
 
