@@ -1,9 +1,9 @@
 security:
     enable_authenticator_manager: true
-    providers:
-        users:
-            entity:
-                class: 'App\Entity\Mailbox'
+#    providers:
+#        users:
+#            entity:
+#                class: 'App\Entity\Mailbox'
 
     password_hashers:
         App\Entity\Mailbox:
@@ -13,6 +13,18 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        main:
+            pattern: ^/
+            oauth:
+                resource_owners:
+                    keycloak:           "/login/check-keycloak"
+                login_path:   /login
+                use_forward:  true
+                failure_path: /login
+
+                oauth_user_provider:
+                    service: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
+
 #        main:
 #            anonymous: true
 #            lazy: true
@@ -27,5 +39,6 @@ security:
 #                path: app_logout
 
     access_control:
-#        - { path: ^/login }
-#        - { path: ^/, roles: ROLE_ADMIN }
+        - { path: ^/login }
+        - { path: ^/connect }
+        - { path: ^/, roles: ROLE_ADMIN }
