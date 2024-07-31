@@ -31,8 +31,7 @@ class Alias {
     private $source_username;
 
     /**
-     * @ManyToOne(targetEntity="Domain")
-     * @JoinColumn(name="source_domain", referencedColumnName="domain", nullable=true)
+     * @ORM\Column(type="string", length=64, nullable=true)
      */
     private $source_domain;
 
@@ -76,11 +75,11 @@ class Alias {
         return $this;
     }
 
-    public function getSourceDomain(): ?Domain {
+    public function getSourceDomain(): ?string {
         return $this->source_domain;
     }
 
-    public function setSourceDomain(?Domain $source_domain): self {
+    public function setSourceDomain(?string $source_domain): self {
         $this->source_domain = $source_domain;
 
         return $this;
