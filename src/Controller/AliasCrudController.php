@@ -12,7 +12,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
@@ -23,10 +22,10 @@ class AliasCrudController extends AbstractCrudController {
     }
 
     public function createEntity(string $entityFqcn) {
-        $alias = new Alias();
-        $alias->setCanSend(true);
-        $alias->setCanReceive(true);
-        return $alias;
+        return (new Alias())
+            ->setCanSend(true)
+            ->setCanReceive(true)
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud {
@@ -74,7 +73,14 @@ class AliasCrudController extends AbstractCrudController {
                 ->setRequired(true)
                 ->onlyOnDetail()
                 ->onlyOnForms()
-                ->setColumns(6)
+                ->setColumns(6),
+            
+            FormField::addPanel(),
+            Field::new('comment')
+                ->setHelp("Free text, no consequence comment")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setEmptyData('')
         ];
     }
 

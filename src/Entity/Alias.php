@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
  * @ORM\Entity
@@ -54,6 +52,12 @@ class Alias {
      * @ORM\Column(type="boolean")
      */
     private $can_receive;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $comment = "";
+
 
     public function getId(): ?int {
         return $this->id;
@@ -113,16 +117,30 @@ class Alias {
         return $this->can_send;
     }
 
-    public function setCanSend($can_send): void {
+    public function setCanSend($can_send): self {
         $this->can_send = $can_send;
+
+        return $this;
     }
 
     public function getCanReceive() {
         return $this->can_receive;
     }
 
-    public function setCanReceive($can_receive): void {
+    public function setCanReceive($can_receive) {
         $this->can_receive = $can_receive;
+
+        return $this;
+    }
+
+    public function getComment(): ?string {
+        return $this->comment;
+    }
+
+    public function setComment(string $comment): self {
+        $this->comment = $comment;
+
+        return $this;
     }
 
 }
