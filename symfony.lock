@@ -94,9 +94,6 @@
     "egulias/email-validator": {
         "version": "2.1.25"
     },
-    "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.2"
-    },
     "hwi/oauth-bundle": {
         "version": "2.0",
         "recipe": {
@@ -109,9 +106,6 @@
             "config/packages/hwi_oauth.yaml",
             "config/routes/hwi_oauth_routing.yaml"
         ]
-    },
-    "laminas/laminas-code": {
-        "version": "4.0.0"
     },
     "laminas/laminas-eventmanager": {
         "version": "3.3.0"
@@ -388,9 +382,6 @@
         "version": "v5.2.1"
     },
     "symfony/property-info": {
-        "version": "v5.2.1"
-    },
-    "symfony/proxy-manager-bridge": {
         "version": "v5.2.1"
     },
     "symfony/routing": {

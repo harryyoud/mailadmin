@@ -12,21 +12,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class DashboardController extends AbstractDashboardController {
-    private AuthorizationCheckerInterface $auth;
     private AdminUrlGenerator $adminUrlGenerator;
 
-    public function __construct(AuthorizationCheckerInterface $auth, AdminUrlGenerator $adminUrlGenerator) {
-        $this->auth = $auth;
+    public function __construct(AdminUrlGenerator $adminUrlGenerator) {
         $this->adminUrlGenerator = $adminUrlGenerator;
     }
 
-    /**
-     * @Route("/", name="admin")
-     */
+    #[Route('/', name: 'admin')]
     public function index(): Response {
         $routeBuilder = $this->adminUrlGenerator;
         return $this->redirect($routeBuilder->setController(MailboxCrudController::class)->generateUrl());
@@ -46,17 +40,12 @@ class DashboardController extends AbstractDashboardController {
         ];
     }
 
-    /**
-     * @Route("/login", name="login")
-     * @return Response
-     */
+    #[Route('/login', name: 'login')]
     public function login(): Response {
         return $this->redirect($this->generateUrl('hwi_oauth_service_redirect', ['service' => 'keycloak']));
     }
 
-    /**
-     * @Route("/logout", name="app_logout")
-     */
+    #[Route('/logout', name: 'app_logout')]
     public function logout() {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
