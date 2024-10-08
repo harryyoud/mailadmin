@@ -5,11 +5,9 @@ namespace App\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface {
-    private string $username;
     private array $roles;
 
-    public function __construct(string $username, array $roles) {
-        $this->username = $username;
+    public function __construct(private string $username, array $roles) {
         $this->roles = array_unique([
             'ROLE_USER',
             'ROLE_OAUTH_USER',

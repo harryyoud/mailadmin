@@ -7,64 +7,43 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="accounts", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="username", columns={"username", "domain"})
- * })
- */
-class Mailbox {
+#[ORM\Entity]
+#[ORM\Table(name: 'accounts')]
+#[ORM\UniqueConstraint(name: 'username', columns: ['username', 'domain'])]
+class Mailbox implements \Stringable {
 
     public function __construct() {
         $this->appPasswords = new ArrayCollection();
     }
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
+    #[ORM\Column(type: 'string', length: 64)]
     private $username;
 
-    /**
-     * @ManyToOne(targetEntity="Domain")
-     * @JoinColumn(name="domain", referencedColumnName="domain", nullable=false)
-     */
+    #[ManyToOne(targetEntity: \Domain::class)]
+    #[JoinColumn(name: 'domain', referencedColumnName: 'domain', nullable: false)]
     private $domain;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Password", mappedBy="mailbox", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: \Password::class, mappedBy: 'mailbox', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $appPasswords;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $password;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $quota;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $enabled;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $sendonly;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $allowedIps = '0.0.0.0/0,::0/0';
 
     private ?string $plainPassword = null;
@@ -159,7 +138,7 @@ class Mailbox {
     }
 
     public function __toString(): string {
-        return $this->getAddress();
+        return (string) $this->getAddress();
     }
 
     public function addAppPassword(Password $password) {

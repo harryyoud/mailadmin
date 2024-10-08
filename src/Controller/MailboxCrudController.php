@@ -29,10 +29,8 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class MailboxCrudController extends AbstractCrudController {
-    private PasswordHasherInterface $passwordHasher;
-
-    public function __construct(DovecotPasswordEncoder $passwordEncoder) {
-        $this->passwordHasher = $passwordEncoder;
+    public function __construct(private PasswordHasherInterface $passwordHasher)
+    {
     }
 
     public static function getEntityFqcn(): string {
@@ -136,7 +134,7 @@ class MailboxCrudController extends AbstractCrudController {
     }
 
     protected function addEncodePasswordEventListener(FormBuilderInterface $formBuilder) {
-        $formBuilder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+        $formBuilder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
             /** @var Mailbox $mailbox */
             $mailbox = $event->getData();
             if (!is_null($mailbox->getPlainPassword()) && !empty($mailbox->getPlainPassword())) {

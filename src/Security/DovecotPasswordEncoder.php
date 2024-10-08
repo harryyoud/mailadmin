@@ -26,7 +26,7 @@ class DovecotPasswordEncoder implements PasswordHasherInterface {
     }
 
     private function stripPrefix(string $hash): string {
-        if (substr($hash, 0, strlen(self::PASSWORD_PREFIX)) !== self::PASSWORD_PREFIX) {
+        if (!str_starts_with($hash, self::PASSWORD_PREFIX)) {
             throw new BadCredentialsException("Not a dovecot password hash");
         }
         return substr($hash, strlen(self::PASSWORD_PREFIX));

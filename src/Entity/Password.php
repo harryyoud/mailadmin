@@ -6,41 +6,35 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Password
- *
- * @ORM\Table(name="passwords", indexes={@ORM\Index(name="IDX_ED822B16A69FE20B", columns={"mailbox"})}, uniqueConstraints={
- *     @ORM\UniqueConstraint(name="app_password", columns={"app_name", "mailbox"})
- * })
- * @ORM\Entity
  */
-class Password
+#[ORM\Entity]
+#[ORM\Table(name: 'passwords')]
+#[ORM\Index(name: 'IDX_ED822B16A69FE20B', columns: ['mailbox'])]
+#[ORM\UniqueConstraint(name: 'app_password', columns: ['app_name', 'mailbox'])]
+class Password implements \Stringable
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="app_name", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'app_name', type: 'string', length: 255, nullable: false)]
     private $appName;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'password', type: 'string', length: 255, nullable: false)]
     private $password;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Mailbox", inversedBy="appPasswords")
-     * @ORM\JoinColumn(name="mailbox", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: \Mailbox::class, inversedBy: 'appPasswords')]
+    #[ORM\JoinColumn(name: 'mailbox', referencedColumnName: 'id', nullable: false)]
     private $mailbox;
 
     private ?string $plainPassword = null;
@@ -85,7 +79,7 @@ class Password
         $this->mailbox = $mailbox;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->appName;
     }
 

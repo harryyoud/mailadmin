@@ -20,7 +20,7 @@ class AppPasswordType extends AbstractType {
         private DovecotPasswordEncoder $passwordHasher,
     ) {}
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->add('appName', TextType::class, [
                 'help' => 'This will form part of the username (e.g. user@domain.com_appname) for this app-specific credential'
@@ -31,7 +31,7 @@ class AppPasswordType extends AbstractType {
                 'required' => true,
             ])
         ;
-        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
             /* @var Password $appPassword */
             $appPassword = $event->getData();
 
@@ -51,7 +51,7 @@ class AppPasswordType extends AbstractType {
                 $appPassword->setPassword($this->passwordHasher->hash(
                     $appPassword->getPlainPassword(),
                 ));
-            } catch (BadCredentialsException $e) {
+            } catch (BadCredentialsException) {
                 $event->getForm()->get('plainPassword')->addError($formError);
                 $event->stopPropagation();
             }
@@ -60,7 +60,7 @@ class AppPasswordType extends AbstractType {
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => Password::class,
         ]);

@@ -4,15 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="domains")
- */
-class Domain {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
+#[ORM\Entity]
+#[ORM\Table(name: 'domains')]
+class Domain implements \Stringable {
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $domain;
 
     public function getDomain(): ?string {
@@ -26,7 +22,7 @@ class Domain {
     }
 
     public function __toString(): string {
-        return $this->domain;
+        return (string) $this->domain;
     }
 
 }

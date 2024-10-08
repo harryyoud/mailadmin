@@ -26,7 +26,7 @@ class ConcatFilter implements FilterInterface {
      */
     public static function new(array $props, $label = null): self {
         return (new self())
-            ->setFilterFqcn(__CLASS__)
+            ->setFilterFqcn(self::class)
             ->setProperty(rtrim(strtr(base64_encode(implode(self::PROP_SEPARATOR, $props)), '+/', '-_'), '='))
             ->setLabel($label)
             ->setFormType(TextFilterType::class);
@@ -39,7 +39,7 @@ class ConcatFilter implements FilterInterface {
         $parameterName = $filterDataDto->getParameterName();
         $value = $filterDataDto->getValue();
 
-        $parameterName = $this->sanitizeParam($parameterName);
+        $parameterName = self::sanitizeParam($parameterName);
 
         $concat_items = [];
 

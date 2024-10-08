@@ -5,10 +5,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="tlspolicies")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'tlspolicies')]
 class TlsPolicy {
     const POLICIES = [
         'none',
@@ -21,35 +19,21 @@ class TlsPolicy {
         'secure',
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank(message="Must have domain")
-     * @Assert\Regex(
-     *     pattern="/^\[?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\]?(:[0-9]{1,5})?\]?$/",
-     *     message="Domain must conform to Postfix format (valid domain name, optionally in square brackets, optionally with a port)"
-     * )
-     */
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'Must have domain')]
+    #[Assert\Regex(pattern: '/^\[?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\]?(:[0-9]{1,5})?\]?$/', message: 'Domain must conform to Postfix format (valid domain name, optionally in square brackets, optionally with a port)')]
     private $domain;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Choice(
-     *     self::POLICIES,
-     *     message="Must be one of Postfix TLS policies",
-     *     multiple=false)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Choice(self::POLICIES, message: 'Must be one of Postfix TLS policies', multiple: false)]
     private $policy = "";
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $params;
 
     public function getId(): ?int {
@@ -86,9 +70,7 @@ class TlsPolicy {
         return $this;
     }
 
-    /**
-     * @Assert\IsTrue(message="Domain must have matching brackets")
-     */
+    #[Assert\IsTrue(message: 'Domain must have matching brackets')]
     public function hasMatchedBracketsInDomain() {
         return substr_count($this->domain, '[') ==
             substr_count($this->domain, ']');
