@@ -48,20 +48,10 @@ class DashboardController extends AbstractDashboardController {
 
     /**
      * @Route("/login", name="login")
-     * @param AuthenticationUtils $authenticationUtils
-     * @param AdminUrlGenerator $routeBuilder
      * @return Response
      */
-    public function login(AuthenticationUtils $authenticationUtils, AdminUrlGenerator $routeBuilder): Response {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render('@EasyAdmin/page/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
-            'page_title' => 'Mail Admin Login',
-            'csrf_token_intention' => 'authenticate',
-            'target_path' => $routeBuilder->setController(MailboxCrudController::class)->generateUrl(),
-        ]);
+    public function login(): Response {
+        return $this->redirect($this->generateUrl('hwi_oauth_service_redirect', ['service' => 'keycloak']));
     }
 
     /**
