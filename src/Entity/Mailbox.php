@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'accounts')]
@@ -22,6 +23,10 @@ class Mailbox implements \Stringable {
     private $id;
 
     #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\Regex(
+        pattern: '/[A-Za-z0-9\-\.]*/',
+        message: 'Username can only contain alphanumerics, dots and hyphens.',
+    )]
     private $username;
 
     #[ManyToOne(targetEntity: \Domain::class)]
