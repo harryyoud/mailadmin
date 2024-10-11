@@ -42,7 +42,7 @@ class AppPasswordType extends AbstractType {
                 null,
             );
 
-            if (is_null($appPassword->getPlainPassword()) || empty($appPassword->getPlainPassword())) {
+            if (empty($appPassword->getPlainPassword())) {
                 // Password empty, so don't set it
                 return;
             }

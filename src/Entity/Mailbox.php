@@ -29,11 +29,11 @@ class Mailbox implements \Stringable {
     )]
     private $username;
 
-    #[ManyToOne(targetEntity: \Domain::class)]
+    #[ManyToOne(targetEntity: Domain::class)]
     #[JoinColumn(name: 'domain', referencedColumnName: 'domain', nullable: false)]
     private $domain;
 
-    #[ORM\OneToMany(targetEntity: \Password::class, mappedBy: 'mailbox', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'mailbox', targetEntity: Password::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $appPasswords;
 
     #[ORM\Column(type: 'string', length: 255)]

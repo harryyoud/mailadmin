@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Mailbox;
 use App\Filter\ConcatFilter;
-use App\Security\DovecotPasswordEncoder;
 use App\Type\AppPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -137,7 +136,7 @@ class MailboxCrudController extends AbstractCrudController {
         $formBuilder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
             /** @var Mailbox $mailbox */
             $mailbox = $event->getData();
-            if (!is_null($mailbox->getPlainPassword()) && !empty($mailbox->getPlainPassword())) {
+            if (!empty($mailbox->getPlainPassword())) {
                 try {
                     $mailbox->setPassword($this->passwordHasher->hash(
                         $mailbox->getPlainPassword(),
