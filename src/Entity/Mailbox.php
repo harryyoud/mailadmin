@@ -24,7 +24,7 @@ class Mailbox implements \Stringable {
 
     #[ORM\Column(type: 'string', length: 64)]
     #[Assert\Regex(
-        pattern: '/[A-Za-z0-9\-\.]*/',
+        pattern: '/^[A-Za-z0-9\-\.]*$/',
         message: 'Username can only contain alphanumerics, dots and hyphens.',
     )]
     private $username;

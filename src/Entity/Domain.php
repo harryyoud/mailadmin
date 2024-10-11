@@ -11,7 +11,7 @@ class Domain implements \Stringable {
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\Regex(
-        pattern: '/[A-Za-z0-9\-\.]*/',
+        pattern: '/^[A-Za-z0-9\-\.]*$/',
         message: 'Domain can only contain alphanumerics, dots and hyphens.',
     )]
     private $domain;
